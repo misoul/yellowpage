@@ -48,6 +48,7 @@ h3 {
 
 h4 {
   font-size: 1.2em;
+  background-color: #c5c5c5;
 }
 
 p, ul {
@@ -56,4 +57,31 @@ p, ul {
 
 ul {
   padding-left: 30px;
+}
+
+.searchBox {
+  font-size: 15px;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 0 2px;
+  padding: 0 5px;
+}
+
+.company {
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 0 2px;
+  padding: 0 5px;
+}
+
+footer {
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+  font-size: 10px;
+  margin: 0 2px;
+  padding: 0 5px;
 }
