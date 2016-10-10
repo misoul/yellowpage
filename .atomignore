@@ -1,0 +1,7 @@
+logs/*
+!.gitkeep
+tmp
+.idea
+.DS_Store
+.ensime
+.git
