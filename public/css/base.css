@@ -59,9 +59,18 @@ ul {
   padding-left: 30px;
 }
 
+.navigationBar {
+  font-size: 13px;
+  background-color: #deedfc;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  margin: 0 2px;
+  padding: 0 5px;
+}
+
 .searchBox {
   font-size: 15px;
-  background-color: #f7f7f7;
+  background-color: #dae6f2;
   border: 1px solid #ddd;
   border-radius: 3px;
   margin: 0 2px;
