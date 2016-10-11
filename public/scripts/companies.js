@@ -1,4 +1,6 @@
-// 'use strict';
+'use strict';
+import React from 'react'
+import Remarkable from 'remarkable'
 
 var ENTER_KEY = 13;
 var currentSearch = "";
@@ -96,8 +98,8 @@ var CompanyList = React.createClass({
   }
 });
 
-
-ReactDOM.render(
-  <CompanyBox url="http://localhost:8080/companies" pollInterval={2000} />,
-  document.getElementById('content')
-);
+export default React.createClass({
+  render() {
+    return <CompanyBox url="http://localhost:8080/companies" pollInterval={2000} />
+  }
+})
