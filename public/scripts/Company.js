@@ -2,6 +2,6 @@ import React from 'react'
 
 export default React.createClass({
   render() {
-    return <div>Company</div>
+    return <div>Company: {this.props.params.companyId}</div>
   }
 })

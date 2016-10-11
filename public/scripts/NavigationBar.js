@@ -4,11 +4,13 @@ import { Link } from 'react-router'
 export default React.createClass({
   render() {
     return (
-      <div className="navigationBar">
-        <Link to="/about">About</Link>
+      <ul role="nav" className="navigationBar">
+        <Link to="/about" activeClassName="active">About</Link>
         --
-        <Link to="/repos">Repos</Link>
-      </div>
+        <Link to="/companies" activeClassName="active">Companies</Link>
+        --
+        <Link to="/company/12" activeClassName="active">Company</Link>
+      </ul>
     )
   }
 })

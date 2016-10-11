@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react'
 import Remarkable from 'remarkable'
+import { Link } from 'react-router'
 
 var ENTER_KEY = 13;
 var currentSearch = "";
@@ -16,7 +17,7 @@ var Company = React.createClass({
     var c = this.props.company
     return (
       <div className="company">
-        <h4 className="companySummary"> {c.name} </h4>
+        <h4 className="companySummary"><Link to="/company/{c.name}">{c.name}</Link></h4>
         <span dangerouslySetInnerHTML={this.rawMarkup(c.desc.toString())} />
         <table><tbody>
           <tr><th>Industry</th><td>{c.industries}</td></tr>
