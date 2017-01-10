@@ -2,12 +2,18 @@
 
 # Company Repo
 
-This code base evolves from [the React tutorial](http://facebook.github.io/react/docs/tutorial.html) code base.
+This code base evolves from [the React tutorial](http://facebook.github.io/react/docs/tutorial.html).
 
 ## TODO
 - Use JSHint to static analysis on JS code to catch bugs early.
 - Backend to support paging
 - Autoscrolling
+
+## How to start
+1. webpack public/index.js
+2. mv bundle.js public/
+3. python server.py
+
 
 ## To use
 
