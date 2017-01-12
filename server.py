@@ -39,6 +39,28 @@ def comments_handler():
         }
     )
 
+@app.route('/api/company', methods=['GET', 'POST'])
+def company_handler():
+    with open('companies.json', 'r') as f:
+        companies = json.loads(f.read())
+
+    if request.method == 'POST':
+        new_company = request.form.to_dict()
+        new_company['id'] = int(time.time() * 1000)
+        companies.append(new_company)
+
+        with open('companies.json', 'w') as f:
+            f.write(json.dumps(companies, indent=2, separators=(',', ': ')))
+
+    return Response(
+        json.dumps(companies),
+        mimetype='application/json',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Access-Control-Allow-Origin': '*'
+        }
+    )
+
 
 if __name__ == '__main__':
     app.run(port=int(os.environ.get("PORT", 3000)), debug=True)
