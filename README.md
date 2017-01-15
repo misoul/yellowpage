@@ -10,9 +10,9 @@ This code base evolves from [the React tutorial](http://facebook.github.io/react
 - Autoscrolling
 
 ## How to start
-1. webpack public/index.js
+1. webpack public/index.js (or: webpack -w)
 2. mv bundle.js public/
-3. python server.py
+3. python server.py (or: go run server.go)
 
 
 ## To use

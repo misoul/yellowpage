@@ -1,0 +1,17 @@
+[{
+	"id": 1,
+	"name": "Google",
+	"industries": 1,
+	"website": "www.google.com",
+	"foundDate": "2001-01-01",
+	"stockCode": ["GOOG", "GOOGL"],
+	"desc": "Google Inc."
+}, {
+	"id": 2,
+	"name": "Procter & Gambles",
+	"industries": 3,
+	"website": "www.png.com",
+	"foundDate": "1970-01-01",
+	"stockCode": ["PG"],
+	"desc": "Proctoer & Gambles Corp"
+}]

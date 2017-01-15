@@ -101,6 +101,6 @@ var CompanyList = React.createClass({
 
 export default React.createClass({
   render() {
-    return <CompanyBox url="http://localhost:8080/companies" pollInterval={2000} />
+    return <CompanyBox url="http://localhost:3000/api/companies" pollInterval={2000} />
   }
 })
