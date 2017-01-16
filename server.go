@@ -11,6 +11,7 @@ import (
 	"os"
 	"sync"
 	"time"
+	"strings"
 )
 
 type comment struct {
@@ -19,8 +20,18 @@ type comment struct {
 	Text   string `json:"text"`
 }
 
-const dataFile = "./comments.json"
-const companiesFile = "./companies.json"
+type company struct {
+	ID          int64  `json:"id"`
+	Name        string `json:"name"`
+	Industries  int32 `json:"industries"`
+	Website     string `json:"website"`
+	FoundDate   string `json:"foundDate"`
+	StockCode   string `json:"stockCode"`
+	Desc        string `json:"desc"`
+}
+
+const dataFile = "./server/data/comments.json"
+const companiesFile = "./server/data/companies.json"
 
 var commentMutex = new(sync.Mutex)
 
@@ -89,17 +100,26 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+
+func Filter(s []company, fn func(company) bool) []company {
+	var p []company // == nil
+	for _, v := range s {
+		if fn(v) {
+			p = append(p, v)
+		}
+	}
+	return p
+}
+
+
 // Handle companies
 func handleCompanies(w http.ResponseWriter, r *http.Request) {
-	// Since multiple requests could come in at once, ensure we have a lock
-	// around all file operations
-	commentMutex.Lock() // TODO: use a different mutex
-	defer commentMutex.Unlock()
-
 	// Stat the file, so we can find its current permissions
 	_, err := os.Stat(companiesFile)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to stat the data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("Unable to stat the data file (%s): %s", companiesFile, err)
+		log.Printf(errMsg)
+		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
 
@@ -110,13 +130,31 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var companies []company
+	if err := json.Unmarshal(data, &companies); err != nil {
+		http.Error(w, fmt.Sprintf("Unable to Unmarshal companies from data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
+		return
+	}
+
 	switch r.Method {
 	case "GET":
+		keywords := r.URL.Query()["keywords"]
+		resultCompanies := companies
+		if keywords != nil {
+			resultCompanies = Filter(companies, func(c company) bool {
+				return strings.Contains(c.Name, keywords[0]) || strings.Contains(c.Desc, keywords[0])
+			} ) //TODO: ghetto!
+		}
+		resultData, err := json.Marshal(resultCompanies)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to marshaling json: %s", err), http.StatusInternalServerError)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		// stream the contents of the file to the response
-		io.Copy(w, bytes.NewReader(data))
+		io.Copy(w, bytes.NewReader(resultData))
 
 	default:
 		// Don't know the method, so error
