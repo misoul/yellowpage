@@ -4,7 +4,7 @@
 	"industries": 1,
 	"website": "www.google.com",
 	"foundDate": "2001-01-01",
-	"stockCode": ["GOOG", "GOOGL"],
+	"stockCode": "GOOG",
 	"desc": "Google Inc."
 }, {
 	"id": 2,
@@ -12,6 +12,6 @@
 	"industries": 3,
 	"website": "www.png.com",
 	"foundDate": "1970-01-01",
-	"stockCode": ["PG"],
+	"stockCode": "PG",
 	"desc": "Proctoer & Gambles Corp"
 }]
