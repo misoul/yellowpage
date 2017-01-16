@@ -4,10 +4,18 @@
 
 This code base evolves from [the React tutorial](http://facebook.github.io/react/docs/tutorial.html).
 
-## TODO
+## TODO / WISHLIST
+- Backend to support multiple data layers: in-mem DB, SQL..
 - Use JSHint to static analysis on JS code to catch bugs early.
 - Backend to support paging
 - Autoscrolling
+- Animation
+- Data visualization/analytics
+- Make a website responsive and fun to interact with
+- CSS for better looking sites
+- Typescript+React+Webpack
+- Phabricator for task/project management
+
 
 ## How to start
 1. webpack public/index.js (or: webpack -w)
@@ -43,8 +51,6 @@ perl server.pl
 And visit <http://localhost:3000/>. Try opening multiple tabs!
 
 ### Changing the port
-
-You can change the port number by setting the `$PORT` environment variable before invoking any of the scripts above, e.g.,
 
 ```sh
 PORT=3001 node server.js
