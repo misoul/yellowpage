@@ -124,7 +124,7 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Read the comments from the file.
-	data, err := ioutil.ReadFile(companiesFile)
+	data, err := ioutil.ReadFile(companiesFile) //TODO: not load file for each REST request
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Unable to read the data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
 		return

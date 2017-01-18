@@ -1,6 +1,10 @@
 *~
 node_modules
 .DS_Store
-public/bower_components/
-target/
 .ensime
+target/
+.idea/
+
+public/bower_components/
+public/bundle.js
+yellowpage.iml
