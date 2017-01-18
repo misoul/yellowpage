@@ -6,5 +6,5 @@ target/
 .idea/
 
 public/bower_components/
-public/bundle.js
+public/build/
 yellowpage.iml
