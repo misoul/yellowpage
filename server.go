@@ -12,6 +12,8 @@ import (
 	"sync"
 	"time"
 	"strings"
+
+	"github.com/misoul/yellowpage/dal"
 )
 
 type comment struct {
@@ -20,15 +22,6 @@ type comment struct {
 	Text   string `json:"text"`
 }
 
-type company struct {
-	ID          int64  `json:"id"`
-	Name        string `json:"name"`
-	Industries  int32 `json:"industries"`
-	Website     string `json:"website"`
-	FoundDate   string `json:"foundDate"`
-	StockCode   string `json:"stockCode"`
-	Desc        string `json:"desc"`
-}
 
 const dataFile = "./server/data/comments.json"
 const companiesFile = "./server/data/companies.json"
@@ -101,8 +94,8 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func Filter(s []company, fn func(company) bool) []company {
-	var p []company // == nil
+func Filter(s []dal.Company, fn func(dal.Company) bool) []dal.Company {
+	var p []dal.Company // == nil
 	for _, v := range s {
 		if fn(v) {
 			p = append(p, v)
@@ -130,7 +123,7 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var companies []company
+	var companies []dal.Company
 	if err := json.Unmarshal(data, &companies); err != nil {
 		http.Error(w, fmt.Sprintf("Unable to Unmarshal companies from data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
 		return
@@ -141,7 +134,7 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 		keywords := r.URL.Query()["keywords"]
 		resultCompanies := companies
 		if keywords != nil {
-			resultCompanies = Filter(companies, func(c company) bool {
+			resultCompanies = Filter(companies, func(c dal.Company) bool {
 				return strings.Contains(c.Name, keywords[0]) || strings.Contains(c.Desc, keywords[0])
 			} ) //TODO: ghetto!
 		}
