@@ -6,6 +6,7 @@ import About from './scripts/About'
 import App from './scripts/App'
 import Company from './scripts/Company'
 import Companies from './scripts/Companies'
+import Comments from './scripts/Comments'
 
 render((
   <Router history={hashHistory}>
@@ -13,6 +14,7 @@ render((
       <Route path="/about" component={About}/>
       <Route path="/companies" component={Companies}/>
       <Route path="/company/:companyId" component={Company}/>
+      <Route path="/comments" component={Comments}/>
     </Route>
   </Router>
 ), document.getElementById('content'))

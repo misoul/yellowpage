@@ -10,6 +10,8 @@ export default React.createClass({
         <Link to="/companies" activeClassName="active">Companies</Link>
         --
         <Link to="/company/12" activeClassName="active">Company</Link>
+        --
+        <Link to="/comments" activeClassName="active">Comments</Link>
       </ul>
     )
   }
