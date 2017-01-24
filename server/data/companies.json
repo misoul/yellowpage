@@ -1,17 +1,49 @@
-[{
-	"id": 1,
-	"name": "Google",
-	"industries": 1,
-	"website": "www.google.com",
-	"foundDate": "2001-01-01",
-	"stockCode": "GOOG",
-	"desc": "Google Inc."
-}, {
-	"id": 2,
-	"name": "Procter & Gambles",
-	"industries": 3,
-	"website": "www.png.com",
-	"foundDate": "1970-01-01",
-	"stockCode": "PG",
-	"desc": "Proctoer & Gambles Corp"
-}]
+[
+  {
+    "industries": "IT",
+    "website": "google.com",
+    "name": "Google Inc.",
+    "photo": "google.jpg",
+    "stockCode": "NASDQA:GOOGL",
+    "foundDate": "1995-01-01",
+    "id": 1,
+    "desc": "Search, Ads and Beyond"
+  },
+  {
+    "industries": "Food & Beverages",
+    "website": "Tribeco.com",
+    "name": "Tribeco",
+    "photo": "tribeco.jpg",
+    "stockCode": "HCMX:TRIB",
+    "foundDate": "1985-01-01",
+    "id": 2,
+    "desc": "N\u01b0\u1edbc gi\u1ea3i kh\u00e1t"
+  },
+  {
+    "industries": "Clothing",
+    "website": "bitis.com",
+    "name": "Bitis",
+    "photo": "bitis.jpg",
+    "stockCode": "HCMX:BITI",
+    "foundDate": "1990-01-01",
+    "id": 3,
+    "desc": "Gi\u00e0y"
+  },
+  {
+    "industries": "0",
+    "website": "0.com",
+    "name": "0",
+    "photo": "0.jpg",
+    "stockCode": "HCMX:0",
+    "foundDate": "1990-01-01",
+    "id": 0,
+    "desc": "0"
+  },
+  {
+    "{  \"name\": \"Aoian Inc\", \"desc\": \"Videos, Ads\",  \"industries\": \"Entertainment\", \"website\": \"Aoian.com\", \"stockCode\": \"NASDQA:AOI\",  \"photo\": \"aoi.jpg\",  \"foundDate\": \"1995-01-01\"}": "",
+    "id": 1476250001625
+  },
+  {
+    "id": 1476250296401
+  }
+]
