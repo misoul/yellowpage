@@ -85,6 +85,9 @@ var CompanyBox = React.createClass({
 var CompanyList = React.createClass({
   render: function() {
     console.log("Rendering: " + this.props.data)
+
+    if (!this.props.data) return (<div className="companyList"/>);
+
     var companyNodes = this.props.data.map(function(company) {
       return (
         <Company key={company.id} company={company}/>

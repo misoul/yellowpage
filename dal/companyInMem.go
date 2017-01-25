@@ -45,6 +45,10 @@ func (cin CompanyInMem) Get(id uint64) Company {
 	return Company{} //TODO
 }
 
+func (cin CompanyInMem) Update(company Company) Company {
+	return Company{} //TODO
+}
+
 func (cin CompanyInMem) Search(keywords []string) []Company {
 	result := cin.companies
 	if keywords != nil {
@@ -57,7 +61,7 @@ func (cin CompanyInMem) Search(keywords []string) []Company {
 
 //TODO: there should be a library for this already
 func Filter(s []Company, fn func(Company) bool) []Company {
-	var p []Company // == nil
+	var p = make([]Company, 0) // More efficient?
 	for _, v := range s {
 		if fn(v) {
 			p = append(p, v)

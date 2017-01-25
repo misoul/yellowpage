@@ -13,5 +13,6 @@ type Company struct {
 type CompanyService interface {
 	Get(id uint64) Company
 	Search(keywords string) []Company
+	Update(company Company) Company
 }
 
