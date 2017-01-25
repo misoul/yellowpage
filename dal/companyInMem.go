@@ -16,29 +16,34 @@ type CompanyInMem struct {
 	companies []Company
 }
 
-func InitDB() CompanyInMem {
+func InitDB() (*CompanyInMem, error) {
 	_, err := os.Stat(companiesFile)
 	if err != nil {
 		errMsg := fmt.Sprintf("Unable to stat the data file (%s): %s", companiesFile, err)
 		log.Fatal(errMsg, http.StatusInternalServerError)
+		return nil, err
 	}
 
 	data, err := ioutil.ReadFile(companiesFile) //TODO: not load file for each REST request
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Unable to read the data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("Unable to read the data file (%s): %s", companiesFile, err)
+		log.Fatal(errMsg, http.StatusInternalServerError)
+		return nil, err
 	}
 
 	var companies []Company
 	if err := json.Unmarshal(data, &companies); err != nil {
-		log.Fatal(fmt.Sprintf("Unable to Unmarshal companies from data file (%s): %s", companiesFile, err), http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("Unable to Unmarshal companies from data file (%s): %s", companiesFile, err)
+		log.Fatal(errMsg, http.StatusInternalServerError)
+		return nil, err
 	}
 
-	return CompanyInMem{companies:companies}
+	return &CompanyInMem{companies:companies}, nil
 }
 
-//func (cin CompanyInMem) Get(id uint64) Company {
-//	return Company{} //TODO
-//}
+func (cin CompanyInMem) Get(id uint64) Company {
+	return Company{} //TODO
+}
 
 func (cin CompanyInMem) Search(keywords []string) []Company {
 	result := cin.companies

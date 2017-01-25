@@ -1,6 +1,7 @@
 /**
  * This file originally from Facebooks' React tutorial. Leave it around for reference for now.
  */
+'use strict'
 import React from 'react'
 import Remarkable from 'remarkable'
 
@@ -137,6 +138,6 @@ var CommentForm = React.createClass({
 
 export default React.createClass({
   render() {
-    return <CommentBox url="http://localhost:3000/api/comments" pollInterval={2000} />
+    return <CommentBox url="http://localhost:3000/api/comments" pollInterval={20000} />
   }
 })

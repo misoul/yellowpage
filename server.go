@@ -25,7 +25,7 @@ type comment struct {
 const dataFile = "./server/data/comments.json"
 
 var commentMutex = new(sync.Mutex)
-var companyService dal.CompanyInMem = dal.InitDB()
+var companyService, _ = dal.InitDB()
 
 // Handle comments
 func handleComments(w http.ResponseWriter, r *http.Request) {
@@ -93,17 +93,6 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func Filter(s []dal.Company, fn func(dal.Company) bool) []dal.Company {
-	var p []dal.Company // == nil
-	for _, v := range s {
-		if fn(v) {
-			p = append(p, v)
-		}
-	}
-	return p
-}
-
-
 // Handle companies
 func handleCompanies(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -138,6 +127,7 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
+
 	http.HandleFunc("/api/comments", handleComments)
 	http.HandleFunc("/api/companies", handleCompanies)
 	http.Handle("/", http.FileServer(http.Dir("./public")))

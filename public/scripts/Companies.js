@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 import React from 'react'
 import Remarkable from 'remarkable'
 import { Link } from 'react-router'
@@ -101,6 +101,6 @@ var CompanyList = React.createClass({
 
 export default React.createClass({
   render() {
-    return <CompanyBox url="http://localhost:3000/api/companies" pollInterval={2000} />
+    return <CompanyBox url="http://localhost:3000/api/companies" pollInterval={20000} />
   }
 })
