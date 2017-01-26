@@ -23,6 +23,8 @@ This code base evolves from [the React tutorial](http://facebook.github.io/react
 2. mv bundle.js public/
 3. python server.py (or: go run server.go)
 
+4. dal$ go generate
+   dal$ go test (or go -v test)
 
 ## To use
 

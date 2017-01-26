@@ -9,3 +9,4 @@ public/bower_components/
 public/build/
 yellowpage.iml
 yellowpage
+mock*.go
