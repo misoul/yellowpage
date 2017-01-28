@@ -1,0 +1,7 @@
+"id","name","industries","website","found_date","stock_code","desc"
+"1","Google Inc.","IT","google.com","1995-01-01","NASDQA:GOOGL","Search, Ads and Beyond"
+"2","Tribeco","Food & Beverages","Tribeco.com","1985-01-01","HCMX:TRIB","Nước giải khát"
+"3","Bitis","Clothing","bitis.com","1990-01-01","HCMX:BITI","Giày"
+"0","0","0","0.com","1990-01-01","HCMX:0","0"
+"1476250001625","","","","","",""
+"1476250296401","","","","","",""

@@ -5,6 +5,7 @@
 This code base evolves from [the React tutorial](http://facebook.github.io/react/docs/tutorial.html).
 
 ## TODO / WISHLIST
+- Chat app for concurrency
 - Upload a file to server. Take pdf and *parse* pdf and present it back to browser.
 - Backend to support multiple data layers: in-mem DB, SQL..
 - Use JSHint to static analysis on JS code to catch bugs early.
