@@ -12,20 +12,24 @@ import (
 	"sync"
 	"time"
 
-	"./dal"
+	"github.com/misoul/yellowpage/dal/mem"
+	"github.com/misoul/yellowpage/dal/mysql"
+	"github.com/misoul/yellowpage/dal"
 )
 
-type comment struct {
-	ID     int64  `json:"id"`
-	Author string `json:"author"`
-	Text   string `json:"text"`
-}
+//type comment struct {
+//	ID     int64  `json:"id"`
+//	Author string `json:"author"`
+//	Text   string `json:"text"`
+//}
 
 
 const dataFile = "./server/data/comments.json"
 
 var commentMutex = new(sync.Mutex)
-var companyService, _ = dal.InitDB()
+var commentService, _ = mem.InitComment()
+//var companyService1, _ = mem.InitCompany()
+var companyService, _ = mysql.InitDB()
 
 // Handle comments
 func handleComments(w http.ResponseWriter, r *http.Request) {
@@ -51,14 +55,15 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		// Decode the JSON data
-		var comments []comment
+		var comments []dal.Comment
 		if err := json.Unmarshal(commentData, &comments); err != nil {
 			http.Error(w, fmt.Sprintf("Unable to Unmarshal comments from data file (%s): %s", dataFile, err), http.StatusInternalServerError)
 			return
 		}
 
 		// Add a new comment to the in memory slice of comments
-		comments = append(comments, comment{ID: time.Now().UnixNano() / 1000000, Author: r.FormValue("author"), Text: r.FormValue("text")})
+
+		comments = append(comments, dal.Comment{ID: time.Now().UnixNano() / 1000000, Author: r.FormValue("author"), Text: r.FormValue("text")})
 
 		// Marshal the comments to indented json.
 		commentData, err = json.MarshalIndent(comments, "", "    ")
@@ -80,11 +85,18 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 		io.Copy(w, bytes.NewReader(commentData))
 
 	case "GET":
+		resultComments := commentService.Search(nil)
+		resultData, err := json.Marshal(resultComments)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Failed to marshaling json: %s", err), http.StatusInternalServerError)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+
 		// stream the contents of the file to the response
-		io.Copy(w, bytes.NewReader(commentData))
+		io.Copy(w, bytes.NewReader(resultData))
 
 	default:
 		// Don't know the method, so error
@@ -108,7 +120,6 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Failed to marshaling json: %s", err), http.StatusInternalServerError)
 		}
 		io.Copy(w, bytes.NewReader(resultData))
-
 	default:
 		// Don't know the method, so error
 		http.Error(w, fmt.Sprintf("Unsupported method: %s", r.Method), http.StatusMethodNotAllowed)
@@ -133,4 +144,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./public")))
 	log.Println("Server started: http://localhost:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, Log(http.DefaultServeMux)))
+
+	commentService.Finalize()
+	companyService.Finalize()
 }

@@ -1,22 +1,23 @@
-package dal
+package mem
 
 import (
-	"strings"
 	"io/ioutil"
 	"net/http"
 	"fmt"
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/misoul/yellowpage/dal"
 )
 
 const companiesFile = "./server/data/companies.json"
 
 type CompanyInMem struct {
-	companies []Company
+	companies []dal.Company
 }
 
-func InitDB() (*CompanyInMem, error) {
+func InitCompany() (*CompanyInMem, error) {
 	_, err := os.Stat(companiesFile)
 	if err != nil {
 		errMsg := fmt.Sprintf("Unable to stat the data file (%s): %s", companiesFile, err)
@@ -31,7 +32,7 @@ func InitDB() (*CompanyInMem, error) {
 		return nil, err
 	}
 
-	var companies []Company
+	var companies []dal.Company
 	if err := json.Unmarshal(data, &companies); err != nil {
 		errMsg := fmt.Sprintf("Unable to Unmarshal companies from data file (%s): %s", companiesFile, err)
 		log.Fatal(errMsg, http.StatusInternalServerError)
@@ -41,31 +42,24 @@ func InitDB() (*CompanyInMem, error) {
 	return &CompanyInMem{companies:companies}, nil
 }
 
-func (cin CompanyInMem) Get(id uint64) Company {
-	return Company{} //TODO
+func (cin CompanyInMem) Finalize() {
+	log.Println("Closing up CompanyInMem: ", cin)
 }
 
-func (cin CompanyInMem) Update(company Company) Company {
-	return Company{} //TODO
+func (cin CompanyInMem) Get(id uint64) dal.Company {
+	return dal.Company{} //TODO
 }
 
-func (cin CompanyInMem) Search(keywords []string) []Company {
+func (cin CompanyInMem) Update(company dal.Company) dal.Company {
+	return dal.Company{} //TODO
+}
+
+func (cin CompanyInMem) Search(keywords []string) []dal.Company {
 	result := cin.companies
 	if keywords != nil {
-		result = Filter(cin.companies, func(c Company) bool {
-			return strings.Contains(c.Name, keywords[0]) || strings.Contains(c.Desc, keywords[0])
-		} ) //TODO: ghetto!
+		result = dal.FilterCompany(cin.companies, func(c dal.Company) bool {
+			return c.MatchKeywords(keywords)
+		})
 	}
 	return result
-}
-
-//TODO: there should be a library for this already
-func Filter(s []Company, fn func(Company) bool) []Company {
-	var p = make([]Company, 0) // More efficient?
-	for _, v := range s {
-		if fn(v) {
-			p = append(p, v)
-		}
-	}
-	return p
 }
