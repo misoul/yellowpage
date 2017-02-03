@@ -5,11 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/misoul/yellowpage/dal/mem"
@@ -26,56 +24,25 @@ import (
 
 const dataFile = "./server/data/comments.json"
 
-var commentMutex = new(sync.Mutex)
 var commentService, _ = mem.InitComment()
 //var companyService1, _ = mem.InitCompany()
 var companyService, _ = mysql.InitDB()
 
 // Handle comments
 func handleComments(w http.ResponseWriter, r *http.Request) {
-	// Since multiple requests could come in at once, ensure we have a lock
-	// around all file operations
-	commentMutex.Lock()
-	defer commentMutex.Unlock()
-
-	// Stat the file, so we can find its current permissions
-	fi, err := os.Stat(dataFile)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to stat the data file (%s): %s", dataFile, err), http.StatusInternalServerError)
-		return
-	}
-
-	// Read the comments from the file.
-	commentData, err := ioutil.ReadFile(dataFile)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to read the data file (%s): %s", dataFile, err), http.StatusInternalServerError)
-		return
-	}
-
 	switch r.Method {
 	case "POST":
-		// Decode the JSON data
-		var comments []dal.Comment
-		if err := json.Unmarshal(commentData, &comments); err != nil {
-			http.Error(w, fmt.Sprintf("Unable to Unmarshal comments from data file (%s): %s", dataFile, err), http.StatusInternalServerError)
+		// Add a new comment to the in memory slice of comments
+		_, err := commentService.Update(dal.Comment{ID: time.Now().UnixNano() / 1000000, Author: r.FormValue("author"), Text: r.FormValue("text")})
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Unable to add comment: %s", err), http.StatusInternalServerError)
 			return
 		}
-
-		// Add a new comment to the in memory slice of comments
-
-		comments = append(comments, dal.Comment{ID: time.Now().UnixNano() / 1000000, Author: r.FormValue("author"), Text: r.FormValue("text")})
 
 		// Marshal the comments to indented json.
-		commentData, err = json.MarshalIndent(comments, "", "    ")
+		commentData, err := json.Marshal(commentService.Search(nil))
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Unable to marshal comments to json: %s", err), http.StatusInternalServerError)
-			return
-		}
-
-		// Write out the comments to the file, preserving permissions
-		err := ioutil.WriteFile(dataFile, commentData, fi.Mode())
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Unable to write comments to data file (%s): %s", dataFile, err), http.StatusInternalServerError)
 			return
 		}
 
