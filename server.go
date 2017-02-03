@@ -15,17 +15,7 @@ import (
 	"github.com/misoul/yellowpage/dal"
 )
 
-//type comment struct {
-//	ID     int64  `json:"id"`
-//	Author string `json:"author"`
-//	Text   string `json:"text"`
-//}
-
-
-const dataFile = "./server/data/comments.json"
-
 var commentService, _ = mem.InitComment()
-//var companyService1, _ = mem.InitCompany()
 var companyService, _ = mysql.InitDB()
 
 // Handle comments

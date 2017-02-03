@@ -15,6 +15,7 @@ func FilterCompany(s []Company, fn func(Company) bool) []Company {
 	return p
 }
 
+//TODO: generic methods
 func FilterComment(s []Comment, fn func(Comment) bool) []Comment {
 	var p = make([]Comment, 0) // More efficient?
 	for _, v := range s {

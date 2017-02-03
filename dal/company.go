@@ -30,14 +30,3 @@ func (c *Company) MatchKeywords(keywords []string) bool {
 func (c *Company) String() string {
 	return fmt.Sprintf("Company[%d,%s,%s,%s,%s,%s,%s]",c.ID,c.Name,c.Industries,c.Website,c.FoundDate,c.StockCode,c.Desc)
 }
-
-////TODO: there should be a library for this already
-//func Filter(s []types.Interface, fn func(types.Interface) bool) []types.Interface {
-//	var p = make([]types.Interface, 0) // More efficient?
-//	for _, v := range s {
-//		if fn(v) {
-//			p = append(p, v)
-//		}
-//	}
-//	return p
-//}
