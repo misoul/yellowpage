@@ -15,18 +15,10 @@ import (
 	"github.com/misoul/yellowpage/dal"
 )
 
-//type comment struct {
-//	ID     int64  `json:"id"`
-//	Author string `json:"author"`
-//	Text   string `json:"text"`
-//}
 
-
-const dataFile = "./server/data/comments.json"
-
+var dbUrl = "root:yellowpage@tcp(192.168.99.100:3306)/testdb1?parseTime=True"
 var commentService, _ = mem.InitComment()
-//var companyService1, _ = mem.InitCompany()
-var companyService, _ = mysql.InitDB()
+var companyService, _ = mysql.InitCompany(dbUrl)
 
 // Handle comments
 func handleComments(w http.ResponseWriter, r *http.Request) {
