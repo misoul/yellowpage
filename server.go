@@ -15,8 +15,9 @@ import (
 	"github.com/misoul/yellowpage/dal"
 )
 
+var dbUrl = "root:yellowpage@tcp(192.168.99.100:3306)/testdb1?parseTime=True"
 var commentService, _ = mem.InitComment()
-var companyService, _ = mysql.InitDB()
+var companyService, _ = mysql.InitCompany(dbUrl)
 
 // Handle comments
 func handleComments(w http.ResponseWriter, r *http.Request) {
