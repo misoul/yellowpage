@@ -9,9 +9,10 @@ import (
 
 //go:generate mockery -name=CompanyService -outpkg=mocks
 type CompanyService interface {
-	Get(id uint64) Company
-	Search(keywords string) []Company
-	Update(company Company) Company
+	Get(id uint64) (Company, error)
+	Create(company Company) (Company, error)
+	Search(keywords string) ([]Company, error)
+	Update(company Company) (Company, error)
 	Finalize()
 }
 

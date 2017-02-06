@@ -3,21 +3,23 @@ package dal
 import (
 	"fmt"
 	"strings"
+	"github.com/jinzhu/gorm"
 )
 
 
 //go:generate mockery -name=CommentService -outpkg=mocks
 type CommentService interface {
-	Get(id uint64) Comment
-	Search(keywords string) []Comment
-	Update(comment Comment) Comment
+	Get(id uint64) (Comment, error)
+	Create(comment Comment) (Comment, error)
+	Search(keywords string) ([]Comment, error)
+	Update(comment Comment) (Comment, error)
 	Finalize()
 }
 
 type Comment struct {
-	ID     int64  `json:"id"`
 	Author string `json:"author"`
 	Text   string `json:"text"`
+	gorm.Model
 }
 
 func (c *Comment) MatchKeywords(keywords []string) bool {

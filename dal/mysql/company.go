@@ -1,10 +1,7 @@
 package mysql
 
 import (
-	//"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
-	"strings"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
@@ -14,7 +11,6 @@ import (
 )
 
 type CompanyMySql struct {
-	companies []dal.Company
 	db *gorm.DB
 }
 
@@ -23,20 +19,11 @@ func InitCompany(dbUrl string) (*CompanyMySql, error) {
 	if err != nil {
 		log.Fatalf("Failed to create SQL.DB: %s", err.Error())  // Just for example purpose. You should use proper error handling instead of panic
 	}
-	defer db.Close()
 
+	db.LogMode(true)
 	db.AutoMigrate(&dal.Company{})
 
-	// Cache all the existing rows in db
-	companies, err := getAllCompanies(db)
-	if err != nil {
-		log.Fatal("Failed to prefetch companies: %s", err)
-	}
-	log.Printf("Preloaded %d rows from database/companies",len(companies))
-
-	//insertRecords(db)
-
-	return &CompanyMySql{db: db, companies: companies}, err
+	return &CompanyMySql{db: db}, err
 }
 
 func insertRecords(db *gorm.DB) { //TODO: replace this with 'goose'
@@ -58,30 +45,55 @@ func (cin CompanyMySql) Finalize() {
 	cin.db.Close()
 }
 
-func (cin CompanyMySql) Get(id uint64) dal.Company {
+func (cin CompanyMySql) Get(id uint64) (dal.Company, error) {
 	var company dal.Company
-	cin.db.First(&company, id)
-	return company
-}
-
-func (cin CompanyMySql) Update(company dal.Company) dal.Company {
-	return dal.Company{} //TODO
-}
-
-func (cin CompanyMySql) Search(keywords []string) []dal.Company {
-	result := cin.companies
-	if keywords != nil {
-		result = dal.FilterCompany(cin.companies, func(c dal.Company) bool {
-			return strings.Contains(c.Name, keywords[0]) || strings.Contains(c.Desc, keywords[0])
-		} ) //TODO: ghetto!
+	err := cin.db.First(&company, id).Error
+	if err != nil {
+		log.Printf("Failed to get company %d: %s", id, err)
 	}
-	return result
+	return company, err
+}
+
+func (cin CompanyMySql) Create(company dal.Company) (dal.Company, error) {
+	err := cin.db.Create(&company).Error
+	if err != nil {
+		log.Printf("Failed to create company [%s]\n", company)
+		log.Println(err)
+	}
+	return company, err
+}
+
+func (cin CompanyMySql) Update(company dal.Company) (dal.Company, error) {
+	err := cin.db.Save(&company).Error
+	if err != nil {
+		log.Printf("Failed to update company [%s]\n", company)
+		log.Println(err)
+	}
+	return company, err
+}
+
+func (cin CompanyMySql) Search(keywords []string) ([]dal.Company, error) {
+	var companies []dal.Company
+	if len(keywords) > 0 && len(keywords[0]) > 0 {
+		search := "%" + keywords[0] + "%"
+		err := cin.db.Where("`name` LIKE ? OR `desc` LIKE ?", search, search).Find(&companies).Error
+		if err != nil {
+			log.Printf("Failed to find %s: %s", keywords[0], err)
+			return nil, err
+		}
+	} else {
+		companies, _ = getAllCompanies(cin.db)
+	}
+
+	return companies, nil
 }
 
 func getAllCompanies(db *gorm.DB) ([]dal.Company, error) {
 	var companies []dal.Company
-
-	db.Find(&companies)
-
+	err := db.Find(&companies).Error
+	if err != nil {
+		log.Printf("Failed to query all: %s", err)
+		return nil, err
+	}
 	return companies, nil
 }

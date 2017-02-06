@@ -8,15 +8,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
-	"github.com/misoul/yellowpage/dal/mem"
 	"github.com/misoul/yellowpage/dal/mysql"
 	"github.com/misoul/yellowpage/dal"
 )
 
 var dbUrl = "root:yellowpage@tcp(192.168.99.100:3306)/testdb1?parseTime=True"
-var commentService, _ = mem.InitComment()
+var commentService, _ = mysql.InitComment(dbUrl)
 var companyService, _ = mysql.InitCompany(dbUrl)
 
 // Handle comments
@@ -24,14 +22,15 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		// Add a new comment to the in memory slice of comments
-		_, err := commentService.Update(dal.Comment{ID: time.Now().UnixNano() / 1000000, Author: r.FormValue("author"), Text: r.FormValue("text")})
+		_, err := commentService.Update(dal.Comment{Author: r.FormValue("author"), Text: r.FormValue("text")})
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Unable to add comment: %s", err), http.StatusInternalServerError)
 			return
 		}
 
 		// Marshal the comments to indented json.
-		commentData, err := json.Marshal(commentService.Search(nil))
+		comments, _ :=  commentService.Search(nil)
+		commentData, err := json.Marshal(comments)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Unable to marshal comments to json: %s", err), http.StatusInternalServerError)
 			return
@@ -43,7 +42,7 @@ func handleComments(w http.ResponseWriter, r *http.Request) {
 		io.Copy(w, bytes.NewReader(commentData))
 
 	case "GET":
-		resultComments := commentService.Search(nil)
+		resultComments, _ := commentService.Search(nil)
 		resultData, err := json.Marshal(resultComments)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Failed to marshaling json: %s", err), http.StatusInternalServerError)
@@ -68,7 +67,7 @@ func handleCompanies(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		keywords := r.URL.Query()["keywords"]
-		resultCompanies := companyService.Search(keywords)
+		resultCompanies, _ := companyService.Search(keywords)
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
